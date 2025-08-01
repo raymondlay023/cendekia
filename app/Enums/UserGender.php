@@ -4,8 +4,8 @@ namespace App\Enums;
 
 enum UserGender: string
 {
-    const MALE = "Laki-laki";
-    const FEMALE = "Perempuan";
+    case MALE = "Laki-laki";
+    case FEMALE = "Perempuan";
 
     public static function options(): array
     {

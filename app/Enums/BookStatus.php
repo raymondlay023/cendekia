@@ -4,11 +4,11 @@ namespace App\Enums;
 
 enum BookStatus: string
 {
-    const AVAILABLE = "Tersedia";
-    const UNAVAILABLE = "Tidak Tersedia";
-    const LOAN = "Dipinjam";
-    const LOST = "Hilang";
-    const DAMAGED = "Rusak";
+    case AVAILABLE = "Tersedia";
+    case UNAVAILABLE = "Tidak Tersedia";
+    case LOAN = "Dipinjam";
+    case LOST = "Hilang";
+    case DAMAGED = "Rusak";
 
     public static function options(): array
     {
