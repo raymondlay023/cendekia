@@ -8,15 +8,19 @@ export default function ApplicationLogo({
     isTitle = true,
 }) {
     return (
-        <Link href={url} className="flext items-center gap-2">
+        <Link href={url} className="flex items-center gap-2">
             <IconInnerShadowBottomRight
                 className={cn("text-orange-500", size)}
             />
 
             {isTitle && (
                 <div className="flex flex-col">
-                    <span>Cendekia</span>
-                    <span>Pengetahuan Tanpa Batas</span>
+                    <span className="font-bold leading-none text-foreground">
+                        Cendekia
+                    </span>
+                    <span className="text-xs font-meidum text-muted-foreground">
+                        Pengetahuan Tanpa Batas
+                    </span>
                 </div>
             )}
         </Link>
