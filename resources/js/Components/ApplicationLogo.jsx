@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
+import { Link } from '@inertiajs/react';
 import { IconInnerShadowBottomRight } from '@tabler/icons-react';
-import { Link } from 'lucide-react';
 
 export default function ApplicationLogo({ url = '#', size = 'size-9', isTitle = true }) {
     return (
@@ -10,7 +10,7 @@ export default function ApplicationLogo({ url = '#', size = 'size-9', isTitle = 
             {isTitle && (
                 <div className="flex flex-col">
                     <span className="font-bold leading-none text-foreground">Cendekia</span>
-                    <span className="font-meidum text-xs text-muted-foreground">Pengetahuan Tanpa Batas</span>
+                    <span className="text-xs font-medium text-muted-foreground">Pengetahuan Tanpa Batas</span>
                 </div>
             )}
         </Link>
