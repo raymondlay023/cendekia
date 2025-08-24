@@ -9,8 +9,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/Components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/Components/ui/sheet';
 import { Toaster } from '@/Components/ui/sonner';
 import { Head, Link } from '@inertiajs/react';
+import { IconLayoutSidebar } from '@tabler/icons-react';
+
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import Sidebar from './Partials/Sidebar';
+import SidebarResponsive from './Partials/SidebarResponsive';
 
 export default function AppLayout({ title, children }) {
     return (
@@ -23,12 +29,33 @@ export default function AppLayout({ title, children }) {
                         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
                             <ApplicationLogo />
                         </div>
-                        <div className="flex-1">{/* Sidebar */}</div>
+                        <div className="flex-1">
+                            <Sidebar />
+                        </div>
                     </div>
                 </div>
                 <div className="flex w-full flex-col lg:w-4/5">
                     <header className="flex h-12 items-center justify-between gap-4 border-b px-4 lg:h-[60px] lg:justify-end lg:px-6">
-                        {/* Sidebar responsive */}
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+                                    <IconLayoutSidebar className="size-5" />
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent side="left" className="flex max-h-screen flex-col overflow-y-auto">
+                                <SheetHeader>
+                                    <SheetTitle>
+                                        <VisuallyHidden.Root>Sidebar Responsive</VisuallyHidden.Root>
+                                    </SheetTitle>
+
+                                    <SheetDescription>
+                                        <VisuallyHidden.Root>Sidebar Responsive</VisuallyHidden.Root>
+                                    </SheetDescription>
+                                </SheetHeader>
+                                {/* menu sidebar responsive */}
+                                <SidebarResponsive />
+                            </SheetContent>
+                        </Sheet>
                         {/* dropdown */}
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
