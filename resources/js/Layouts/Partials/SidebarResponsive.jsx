@@ -22,13 +22,18 @@ import {
     IconVersions,
 } from '@tabler/icons-react';
 
-export default function SidebarResponsive() {
+export default function SidebarResponsive({ url, auth }) {
     return (
         <nav className="grid gap-6 text-lg font-medium">
             <ApplicationLogo />
             <nav className="item-start grid text-sm font-semibold lg:px-4">
                 <div className="px-3 py-2 text-sm font-semibold text-foreground">Dashboard</div>
-                <NavLink url="#" title="Dashboard" icon={IconDashboard} />
+                <NavLink
+                    url={route('dashboard')}
+                    active={url.startsWith('/dashboard')}
+                    title="Dashboard"
+                    icon={IconDashboard}
+                />
                 <div className="px-3 py-2 text-sm font-semibold text-foreground">Statistik</div>
                 <NavLink url="#" title="Statistik Peminjaman" icon={IconChartDots2} />
                 <NavLink url="#" title="Laporan Denda" icon={IconMoneybag} />
