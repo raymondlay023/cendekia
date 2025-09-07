@@ -49,7 +49,7 @@ export default function Login({ status, canResetPassword }) {
                                         name="email"
                                         value={data.email}
                                         autoComplete="username"
-                                        isFocused={true}
+                                        placeholder="raymond@cendekia.test"
                                         onChange={(e) => setData(e.target.name, e.target.value)}
                                     />
 
