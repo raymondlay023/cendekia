@@ -1,4 +1,6 @@
-import { Alert } from '@/Components/ui/alert';
+import ApplicationLogo from '@/Components/ApplicationLogo';
+import { Alert, AlertDescription } from '@/Components/ui/alert';
+import { Button } from '@/Components/ui/button';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Link, useForm } from '@inertiajs/react';
 
@@ -19,7 +21,7 @@ export default function VerifyEmail({ status }) {
                     <div className="flex flex-col items-center justify-center py-12 lg:py-48">
                         <div className="mx-auto flex w-full flex-col gap-6 lg:w-1/2">
                             <div className="grid gap-2 text-center">
-                                {status === 'vefication-link-sent' && (
+                                {status === 'verification-link-sent' && (
                                     <Alert variant="success">
                                         <AlertDescription>
                                             A new verification link has been sent to the email address you provided
@@ -39,7 +41,7 @@ export default function VerifyEmail({ status }) {
                             <form onSubmit={onHandleSubmit}>
                                 <div className="grid gap-4">
                                     <Button variant="orange" size="xl" className="w-full" disabled={processing}>
-                                        Reset Verification Email
+                                        Resend Verification Email
                                     </Button>
                                 </div>
                             </form>

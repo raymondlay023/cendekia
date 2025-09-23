@@ -1,7 +1,7 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Checkbox from '@/Components/Checkbox';
 import InputError from '@/Components/InputError';
-import { AlertDescription } from '@/Components/ui/alert';
+import { Alert, AlertDescription } from '@/Components/ui/alert';
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
@@ -30,7 +30,11 @@ export default function Login({ status, canResetPassword }) {
                 <div className="flex flex-col items-center justify-center py-12 lg:py-48">
                     <div className="mx-auto flex w-full flex-col gap-6 lg:w-1/2">
                         <div className="grid gap-2 text-center">
-                            {status && <AlertDescription>{status}</AlertDescription>}
+                            {status && (
+                                <Alert variant="success">
+                                    <AlertDescription>{status}</AlertDescription>
+                                </Alert>
+                            )}
                             <h1 className="text-3xl font-bold">Masuk</h1>
                             <p className="text-balance text-muted-foreground">
                                 Masukkan email anda di bawah ini untuk masuk ke akun anda
