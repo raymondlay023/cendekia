@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,7 @@ class CategoryController extends Controller
             ->select(['id', 'name', 'slug', 'cover', 'created_at'])
             ->get();
         return Inertia('Admin/Categories/Index', [
-            'categories' => $categories,
+            'categories' => CategoryResource::collection($categories),
             'page_settings' => [
                 'title' => 'Kategori',
                 'subtitle' => 'Menampilkan semua data kategori yang tersedia'
