@@ -25,7 +25,7 @@ class Book extends Model
         'cover',
         'price',
         'category_id',
-        'publisher_id'
+        'publisher_id',
     ];
 
     protected function casts(): array
@@ -35,7 +35,6 @@ class Book extends Model
             'status' => BookStatus::class,
         ];
     }
-
 
     public function category(): BelongsTo
     {

@@ -29,7 +29,7 @@ class CategoryFactory extends Factory
                 'Pengembangan Diri',
                 'Misteri',
             ]),
-            'slug' => str()->slug($name) . str()->lower(str()->random(4)),
+            'slug' => str()->slug($name).str()->lower(str()->random(4)),
         ];
     }
 }
