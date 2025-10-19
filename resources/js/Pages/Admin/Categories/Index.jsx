@@ -14,6 +14,7 @@ import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink } from '@/Components/ui/pagination';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import { UseFilter } from '@/hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
@@ -26,6 +27,14 @@ import { useState } from 'react';
 export default function Index(props) {
     const { data: categories, meta } = props.categories;
     const [params, setParams] = useState(props.state);
+
+    const onSortable = (field) => {
+        setParams({
+            ...params,
+            field: field,
+            direction: params.direction === 'asc' ? 'desc' : 'asc',
+        });
+    };
 
     UseFilter({
         route: route('admin.categories.index'),
@@ -56,17 +65,54 @@ export default function Index(props) {
                             value={params?.search}
                             onChange={(e) => setParams((prev) => ({ ...prev, search: e.target.value }))}
                         />
+
+                        <Select value={params?.load} onValueChange={(e) => setParams({ ...params, load: e })}>
+                            <SelectTrigger className="w-full sm:w-24">
+                                <SelectValue placeholder="Load" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {[10, 25, 50, 100].map((number, index) => (
+                                    <SelectItem key={index} value={number}>
+                                        {number}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
                 </CardHeader>
                 <CardContent className="px-8 py-8 [&-td]:whitespace-nowrap [&_td]:px-6 [&_th]:px-6">
                     <Table className="w-full">
                         <TableHeader>
                             <TableRow>
-                                <TableHead>#</TableHead>
+                                <TableHead>
+                                    <Button
+                                        variant="ghost"
+                                        className="group inline-flex"
+                                        onClick={() => onSortable('id')}
+                                    >
+                                        #
+                                    </Button>
+                                </TableHead>
                                 <TableHead>Nama</TableHead>
-                                <TableHead>Slug</TableHead>
+                                <TableHead>
+                                    <Button
+                                        variant="ghost"
+                                        className="group inline-flex"
+                                        onClick={() => onSortable('slug')}
+                                    >
+                                        Slug
+                                    </Button>
+                                </TableHead>
                                 <TableHead>Cover</TableHead>
-                                <TableHead>Dibuat Pada</TableHead>
+                                <TableHead>
+                                    <Button
+                                        variant="ghost"
+                                        className="group inline-flex"
+                                        onClick={() => onSortable('created_at')}
+                                    >
+                                        Dibuat pada
+                                    </Button>
+                                </TableHead>
                                 <TableHead>Aksi</TableHead>
                             </TableRow>
                         </TableHeader>
