@@ -21,7 +21,7 @@ import AppLayout from '@/Layouts/AppLayout';
 import flashMessage from '@/lib/utils';
 import { Link, router } from '@inertiajs/react';
 import { AlertDialogTrigger } from '@radix-ui/react-alert-dialog';
-import { IconCategory, IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconArrowsDownUp, IconCategory, IconPencil, IconPlus, IconRefresh, IconTrash } from '@tabler/icons-react';
 import { useState } from 'react';
 
 export default function Index(props) {
@@ -78,6 +78,9 @@ export default function Index(props) {
                                 ))}
                             </SelectContent>
                         </Select>
+                        <Button variant="red" onClick={() => setParams(props.state)} size="xl">
+                            <IconRefresh className="size-4" /> Bersihkan
+                        </Button>
                     </div>
                 </CardHeader>
                 <CardContent className="px-8 py-8 [&-td]:whitespace-nowrap [&_td]:px-6 [&_th]:px-6">
@@ -91,9 +94,23 @@ export default function Index(props) {
                                         onClick={() => onSortable('id')}
                                     >
                                         #
+                                        <span className="ml-2 flex-none rounded text-muted-foreground">
+                                            <IconArrowsDownUp />
+                                        </span>
                                     </Button>
                                 </TableHead>
-                                <TableHead>Nama</TableHead>
+                                <TableHead>
+                                    <Button
+                                        variant="ghost"
+                                        className="group inline-flex"
+                                        onClick={() => onSortable('name')}
+                                    >
+                                        Nama
+                                        <span className="ml-2 flex-none rounded text-muted-foreground">
+                                            <IconArrowsDownUp />
+                                        </span>
+                                    </Button>
+                                </TableHead>
                                 <TableHead>
                                     <Button
                                         variant="ghost"
@@ -101,6 +118,9 @@ export default function Index(props) {
                                         onClick={() => onSortable('slug')}
                                     >
                                         Slug
+                                        <span className="ml-2 flex-none rounded text-muted-foreground">
+                                            <IconArrowsDownUp />
+                                        </span>
                                     </Button>
                                 </TableHead>
                                 <TableHead>Cover</TableHead>
@@ -111,6 +131,9 @@ export default function Index(props) {
                                         onClick={() => onSortable('created_at')}
                                     >
                                         Dibuat pada
+                                        <span className="ml-2 flex-none rounded text-muted-foreground">
+                                            <IconArrowsDownUp />
+                                        </span>
                                     </Button>
                                 </TableHead>
                                 <TableHead>Aksi</TableHead>
