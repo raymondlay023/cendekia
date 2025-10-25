@@ -97,7 +97,7 @@ export default function Create(props) {
                             <Button type="button" variant="ghost" size="lg" onClick={onHandleReset}>
                                 Reset
                             </Button>
-                            <Button type="submit" variant="orange" size="lg">
+                            <Button type="submit" variant="orange" size="lg" disabled={processing}>
                                 Save
                             </Button>
                         </div>
