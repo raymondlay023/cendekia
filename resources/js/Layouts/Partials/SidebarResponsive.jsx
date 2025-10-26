@@ -45,7 +45,12 @@ export default function SidebarResponsive({ url, auth }) {
                     title="Kategori"
                     icon={IconCategory}
                 />
-                <NavLink url="#" title="Penerbit" icon={IconBuildingCommunity} />
+                <NavLink
+                    url={route('admin.publishers.index')}
+                    title="Penerbit"
+                    active={url.startsWith('/admin/publishers')}
+                    icon={IconBuildingCommunity}
+                />
                 <NavLink url="#" title="Buku" icon={IconBooks} />
                 <NavLink url="#" title="Pengguna" icon={IconUsersGroup} />
                 <NavLink url="#" title="Pengaturan Denda" icon={IconSettingsExclamation} />
