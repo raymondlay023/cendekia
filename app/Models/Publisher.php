@@ -20,7 +20,6 @@ class Publisher extends Model
         'logo',
     ];
 
-
     public function books(): HasMany
     {
         return $this->hasMany(Book::class);
@@ -28,14 +27,14 @@ class Publisher extends Model
 
     public function scopeFilter(Builder $query, array $filters): void
     {
-        $query->when($filters['search'] ?? null, function($query, $search){
-            $query->where(function($query) use ($search){
+        $query->when($filters['search'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
                 $query->whereAny([
                     'name',
                     'slug',
                     'address',
                     'email',
-                    'phone'
+                    'phone',
                 ], 'REGEXP', $search);
             });
         });
@@ -43,8 +42,8 @@ class Publisher extends Model
 
     public function scopeSorting(Builder $query, array $sorts): void
     {
-        $query->when($sorts['field'] ?? null && $sorts['direction'] ?? null, function($query) use ($sorts){
+        $query->when($sorts['field'] ?? null && $sorts['direction'] ?? null, function ($query) use ($sorts) {
             $query->orderBy($sorts['field'], $sorts['direction']);
-        }); 
+        });
     }
 }

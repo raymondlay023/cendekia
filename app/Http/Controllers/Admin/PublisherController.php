@@ -36,7 +36,7 @@ class PublisherController extends Controller
                 ],
             ]),
             'state' => [
-                'page' =>  request()->page ?? 1,
+                'page' => request()->page ?? 1,
                 'search' => request()->search ?? '',
                 'load' => 10,
             ],
@@ -45,7 +45,7 @@ class PublisherController extends Controller
 
     public function create(): Response
     {
-        return inertia('Admin/Publishers/Create',[
+        return inertia('Admin/Publishers/Create', [
             'page_settings' => [
                 'title' => 'Tambah Penerbit',
                 'subtitle' => 'Buat penerbit baru disini. Klik simpan setelah selesai.',
@@ -68,20 +68,22 @@ class PublisherController extends Controller
             ]);
 
             flashMessage(MessageType::CREATED->message('Penerbit'));
+
             return to_route('admin.publishers.index');
         } catch (\Throwable $e) {
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
+
             return to_route('admin.publishers.index');
         }
     }
 
-    public function edit(Publisher $publisher): Response 
+    public function edit(Publisher $publisher): Response
     {
-        return inertia('Admin/Publishers/Edit',[
+        return inertia('Admin/Publishers/Edit', [
             'page_settings' => [
                 'title' => 'Edit Penerbit',
                 'subtitle' => 'Edit penerbit disini. Klik simpan setelah selesai.',
-                '_method' => "PUT",
+                '_method' => 'PUT',
                 'action' => route('admin.publishers.update', $publisher),
             ],
             'publisher' => $publisher,
@@ -90,7 +92,7 @@ class PublisherController extends Controller
 
     public function update(Publisher $publisher, PublisherRequest $request): RedirectResponse
     {
-         try {
+        try {
             $publisher->update([
                 'name' => $name = $request->name,
                 'slug' => $name !== $publisher->name ? str()->lower(str()->slug($name), str()->random(4)) : $publisher->slug,
@@ -101,9 +103,11 @@ class PublisherController extends Controller
             ]);
 
             flashMessage(MessageType::UPDATED->message('Penerbit'));
+
             return to_route('admin.publishers.index');
         } catch (\Throwable $e) {
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
+
             return to_route('admin.publishers.index');
         }
     }
@@ -115,9 +119,11 @@ class PublisherController extends Controller
             $publisher->delete();
 
             flashMessage(MessageType::DELETED->message('Penerbit'));
+
             return to_route('admin.publishers.index');
         } catch (\Throwable $e) {
             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
+
             return to_route('admin.publishers.index');
         }
     }
