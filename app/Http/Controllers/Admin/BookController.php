@@ -36,4 +36,19 @@ class BookController extends Controller
             ],
         ]);
     }
+
+    public function create(): Response
+    {
+        return inertia('Admin/Books/Create', [
+            'page_settings' => [
+                'title' => 'Tambah Buku',
+                'subtitle' => 'Buat buku baru disini. Klik simpan setelah selesai.',
+                'method' => 'POST',
+                'action' => route('admin.books.store'),
+            ],
+            'page_data' => [
+                'publicationYears' => range(2000, now()->year), 
+            ],
+        ]);
+    }
 }
