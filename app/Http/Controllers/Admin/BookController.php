@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\BookLanguage;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\BookResource;
 use App\Models\Book;
+use App\Models\Category;
+use App\Models\Publisher;
 use Inertia\Response;
 
 class BookController extends Controller
@@ -47,7 +50,16 @@ class BookController extends Controller
                 'action' => route('admin.books.store'),
             ],
             'page_data' => [
-                'publicationYears' => range(2000, now()->year), 
+                'publicationYears' => range(2000, now()->year),
+                'languages' => BookLanguage::options(),
+                'categories' => Category::query()->select('id', 'name')->get()->map(fn($item) => [
+                    'value' => $item->id,
+                    'label' => $item->name,
+                ]),
+                'publishers' => Publisher::query()->select('id', 'name')->get()->map(fn($item) => [
+                    'value' => $item->id,
+                    'label' => $item->name,
+                ]),
             ],
         ]);
     }

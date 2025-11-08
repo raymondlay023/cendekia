@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
+import { Textarea } from '@/Components/ui/textarea';
 import AppLayout from '@/Layouts/AppLayout';
 import flashMessage from '@/lib/utils';
 import { Link, useForm } from '@inertiajs/react';
@@ -19,12 +20,12 @@ export default function Create(props) {
         author: '',
         publication_year: null,
         isbn: '',
-        language: '',
+        language: null,
         number_of_pages: '',
         cover: null,
         price: 0,
-        category_id: '',
-        publisher_id: '',
+        category_id: null,
+        publisher_id: null,
         total: 0,
         _method: props.page_settings.method,
     });
@@ -80,6 +81,18 @@ export default function Create(props) {
                             {errors.title && <InputError message={errors.title} />}
                         </div>
                         <div className="grid w-full items-center gap-1.5">
+                            <Label htmlFor="author">Penulis</Label>
+                            <Input
+                                name="author"
+                                id="author"
+                                type="text"
+                                placeholder="Masukkan penulis"
+                                value={data.author}
+                                onChange={onHandleChange}
+                            />
+                            {errors.author && <InputError message={errors.author} />}
+                        </div>
+                        <div className="grid w-full items-center gap-1.5">
                             <Label htmlFor="publication_year">Tahun terbit</Label>
                             <Select
                                 defaultValue={data.publication_year}
@@ -103,6 +116,62 @@ export default function Create(props) {
                             {errors.publication_year && <InputError message={errors.publication_year} />}
                         </div>
                         <div className="grid w-full items-center gap-1.5">
+                            <Label htmlFor="isbn">ISBN (Internaional Standar Book Number)</Label>
+                            <Input
+                                name="isbn"
+                                id="isbn"
+                                type="text"
+                                placeholder="Masukkan isbn"
+                                value={data.isbn}
+                                onChange={onHandleChange}
+                            />
+                            {errors.isbn && <InputError message={errors.isbn} />}
+                        </div>
+                        <div className="grid w-full items-center gap-1.5">
+                            <Label htmlFor="language">Bahasa</Label>
+                            <Select defaultValue={data.language} onValueChange={(value) => setData('language', value)}>
+                                <SelectTrigger>
+                                    <SelectValue>
+                                        {props.page_data.languages.find(
+                                            (language) => language.value == data.language,
+                                        ) ?? 'Pilih bahasa'}
+                                    </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {props.page_data.languages.map((language, index) => (
+                                        <SelectItem key={index} value={language.value}>
+                                            {language.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {errors.language && <InputError message={errors.language} />}
+                        </div>
+                        <div className="grid w-full items-center gap-1.5">
+                            <Label htmlFor="synopsis">Sinopsis</Label>
+                            <Textarea
+                                name="synopsis"
+                                id="synopsis"
+                                onChange={onHandleChange}
+                                placeholder="Masukkan sinopsis.."
+                                value={data.synopsis}
+                            ></Textarea>
+
+                            {errors.synopsis && <InputError message={errors.synopsis} />}
+                        </div>
+                        <div className="grid w-full items-center gap-1.5">
+                            <Label htmlFor="number_of_pages">Jumlah Halaman</Label>
+                            <Input
+                                name="number_of_pages"
+                                id="number_of_pages"
+                                type="number"
+                                placeholder="Masukkan jumlah halaman..."
+                                value={data.number_of_pages}
+                                onChange={onHandleChange}
+                            />
+                            {errors.number_of_pages && <InputError message={errors.number_of_pages} />}
+                        </div>
+                        <div className="grid w-full items-center gap-1.5">
                             <Label htmlFor="cover">Cover</Label>
                             <Input
                                 name="cover"
@@ -112,6 +181,98 @@ export default function Create(props) {
                                 ref={fileInputCover}
                             />
                             {errors.cover && <InputError message={errors.cover} />}
+                        </div>
+                        <div className="grid w-full items-center gap-1.5">
+                            <Label htmlFor="price">Harga</Label>
+                            <Input
+                                name="price"
+                                id="price"
+                                type="number"
+                                placeholder="Masukkan harga..."
+                                value={data.price}
+                                onChange={onHandleChange}
+                            />
+                            {errors.price && <InputError message={errors.price} />}
+                        </div>
+                        <div className="grid w-full items-center gap-1.5">
+                            <Label htmlFor="category_id">Kategori</Label>
+                            <Select
+                                defaultValue={data.category_id}
+                                onValueChange={(value) => setData('category', value)}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue>
+                                        {props.page_data.categories.find(
+                                            (category) => category.value == data.category_id,
+                                        ) ?? 'Pilih kategori'}
+                                    </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {props.page_data.categories.map((category, index) => (
+                                        <SelectItem key={index} value={category.value}>
+                                            {category.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {errors.category_id && <InputError message={errors.category_id} />}
+                        </div>
+                        <div className="grid w-full items-center gap-1.5">
+                            <Label htmlFor="publisher_id">Penerbit</Label>
+                            <Select
+                                defaultValue={data.publisher_id}
+                                onValueChange={(value) => setData('publisher_id', value)}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue>
+                                        {props.page_data.publishers.find(
+                                            (publisher) => publisher.value == data.publisher_id,
+                                        ) ?? 'Pilih penerbit'}
+                                    </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {props.page_data.publishers.map((publisher, index) => (
+                                        <SelectItem key={index} value={publisher.value}>
+                                            {publisher.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {errors.publisher_id && <InputError message={errors.publisher_id} />}
+                        </div>
+                        <div className="grid w-full items-center gap-1.5">
+                            <Label htmlFor="total">Stok</Label>
+                            <Input
+                                name="total"
+                                id="total"
+                                type="number"
+                                placeholder="Masukkan total stok..."
+                                min="0"
+                                value={data.total}
+                                onChange={onHandleChange}
+                            />
+                            {errors.total && <InputError message={errors.total} />}
+                        </div>
+
+                        <div className="grid w-full items-center gap-1.5">
+                            <Label htmlFor="language">Bahasa</Label>
+                            <Select defaultValue={data.language} onValueChange={(value) => setData('language', value)}>
+                                <SelectTrigger>
+                                    <SelectValue>
+                                        {props.page_data.languages.find(
+                                            (language) => language.value == data.language,
+                                        ) ?? 'Pilih bahasa'}
+                                    </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {props.page_data.languages.map((language, index) => (
+                                        <SelectItem key={index} value={language.value}>
+                                            {language.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {errors.language && <InputError message={errors.language} />}
                         </div>
                         <div className="flex justify-end px-2">
                             <Button type="button" variant="ghost" size="lg" onClick={onHandleReset}>
