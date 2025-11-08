@@ -3,15 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\BookLanguage;
+use App\Enums\BookStatus;
+use App\Enums\MessageType;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\BookRequest;
 use App\Http\Resources\Admin\BookResource;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
+use App\Traits\HasFile;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Response;
 
 class BookController extends Controller
 {
+    use HasFile;
+
     public function index(): Response
     {
         $books = Book::query()
@@ -22,6 +29,7 @@ class BookController extends Controller
             ->latest('created_at')
             ->paginate(request()->load ?? 10)
             ->withQueryString();
+
         return inertia('Admin/Books/Index', [
             'page_settings' => [
                 'title' => 'Buku',
@@ -52,15 +60,66 @@ class BookController extends Controller
             'page_data' => [
                 'publicationYears' => range(2000, now()->year),
                 'languages' => BookLanguage::options(),
-                'categories' => Category::query()->select('id', 'name')->get()->map(fn($item) => [
+                'categories' => Category::query()->select('id', 'name')->get()->map(fn ($item) => [
                     'value' => $item->id,
                     'label' => $item->name,
                 ]),
-                'publishers' => Publisher::query()->select('id', 'name')->get()->map(fn($item) => [
+                'publishers' => Publisher::query()->select('id', 'name')->get()->map(fn ($item) => [
                     'value' => $item->id,
                     'label' => $item->name,
                 ]),
             ],
         ]);
+    }
+
+    public function store(BookRequest $request): RedirectResponse
+    {
+        try {
+            Book::create([
+                'book_code' => $this->bookCode($request->publication_year, $request->category_id),
+                'title' => $title = $request->title,
+                'slug' => str()->lower(str()->slug($title), str()->random(4)),
+                'author' => $request->author,
+                'publication_year' => $request->publication_year,
+                'isbn' => $request->isbn,
+                'language' => $request->language,
+                'synopsis' => $request->synopsis,
+                'number_of_pages' => $request->number_of_pages,
+                'status' => $request->total > 0 ? BookStatus::AVAILABLE->value : BookStatus::UNAVAILABLE->value,
+                'cover' => $this->upload_file($request, 'cover', 'books'),
+                'price' => $request->price,
+                'category_id' => $request->category_id,
+                'publisher_id' => $request->publisher_id,
+            ]);
+
+            flashMessage(MessageType::CREATED->message('Buku'));
+
+            return to_route('admin.books.index');
+
+        } catch (\Throwable $e) {
+            flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
+
+            return to_route('admin.books.index');
+        }
+    }
+
+    private function bookCode(int $publication_year, int $category_id): string
+    {
+        $category = Category::find($category_id);
+
+        $last_book = Book::query()
+            ->orderByDesc('book_code')
+            ->first();
+
+        $order = 1;
+
+        if ($last_book) {
+            $last_order = (int) substr($last_book->book_code, -4);
+            $order = $last_order + 1;
+        }
+
+        $ordering = str_pad($order, 4, '0', STR_PAD_LEFT);
+
+        return 'CA'.$publication_year.'.'.str()->slug($category->name).'.'.$ordering;
     }
 }

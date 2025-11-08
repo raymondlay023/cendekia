@@ -116,7 +116,7 @@ export default function Create(props) {
                             {errors.publication_year && <InputError message={errors.publication_year} />}
                         </div>
                         <div className="grid w-full items-center gap-1.5">
-                            <Label htmlFor="isbn">ISBN (Internaional Standar Book Number)</Label>
+                            <Label htmlFor="isbn">ISBN (International Standar Book Number)</Label>
                             <Input
                                 name="isbn"
                                 id="isbn"
@@ -132,9 +132,8 @@ export default function Create(props) {
                             <Select defaultValue={data.language} onValueChange={(value) => setData('language', value)}>
                                 <SelectTrigger>
                                     <SelectValue>
-                                        {props.page_data.languages.find(
-                                            (language) => language.value == data.language,
-                                        ) ?? 'Pilih bahasa'}
+                                        {props.page_data.languages.find((language) => language.value == data.language)
+                                            ?.label ?? 'Pilih bahasa'}
                                     </SelectValue>
                                 </SelectTrigger>
                                 <SelectContent>
@@ -198,13 +197,13 @@ export default function Create(props) {
                             <Label htmlFor="category_id">Kategori</Label>
                             <Select
                                 defaultValue={data.category_id}
-                                onValueChange={(value) => setData('category', value)}
+                                onValueChange={(value) => setData('category_id', value)}
                             >
                                 <SelectTrigger>
                                     <SelectValue>
                                         {props.page_data.categories.find(
                                             (category) => category.value == data.category_id,
-                                        ) ?? 'Pilih kategori'}
+                                        )?.label ?? 'Pilih kategori'}
                                     </SelectValue>
                                 </SelectTrigger>
                                 <SelectContent>
@@ -227,7 +226,7 @@ export default function Create(props) {
                                     <SelectValue>
                                         {props.page_data.publishers.find(
                                             (publisher) => publisher.value == data.publisher_id,
-                                        ) ?? 'Pilih penerbit'}
+                                        )?.label ?? 'Pilih penerbit'}
                                     </SelectValue>
                                 </SelectTrigger>
                                 <SelectContent>
@@ -252,27 +251,6 @@ export default function Create(props) {
                                 onChange={onHandleChange}
                             />
                             {errors.total && <InputError message={errors.total} />}
-                        </div>
-
-                        <div className="grid w-full items-center gap-1.5">
-                            <Label htmlFor="language">Bahasa</Label>
-                            <Select defaultValue={data.language} onValueChange={(value) => setData('language', value)}>
-                                <SelectTrigger>
-                                    <SelectValue>
-                                        {props.page_data.languages.find(
-                                            (language) => language.value == data.language,
-                                        ) ?? 'Pilih bahasa'}
-                                    </SelectValue>
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {props.page_data.languages.map((language, index) => (
-                                        <SelectItem key={index} value={language.value}>
-                                            {language.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            {errors.language && <InputError message={errors.language} />}
                         </div>
                         <div className="flex justify-end px-2">
                             <Button type="button" variant="ghost" size="lg" onClick={onHandleReset}>
