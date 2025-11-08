@@ -122,4 +122,76 @@ class BookController extends Controller
 
         return 'CA'.$publication_year.'.'.str()->slug($category->name).'.'.$ordering;
     }
+
+    public function edit(Book $book): Response
+    {
+        return inertia('Admin/Books/Edit', [
+            'page_settings' => [
+                'title' => 'Edit Buku',
+                'subtitle' => 'Edit buku baru disini. Klik simpan setelah selesai.',
+                'method' => 'PUT',
+                'action' => route('admin.books.update', $book),
+            ],
+            'book' => $book,
+            'page_data' => [
+                'publicationYears' => range(2000, now()->year),
+                'languages' => BookLanguage::options(),
+                'categories' => Category::query()->select('id', 'name')->get()->map(fn ($item) => [
+                    'value' => $item->id,
+                    'label' => $item->name,
+                ]),
+                'publishers' => Publisher::query()->select('id', 'name')->get()->map(fn ($item) => [
+                    'value' => $item->id,
+                    'label' => $item->name,
+                ]),
+            ],
+        ]);
+    }
+
+    public function update(Book $book, BookRequest $request): RedirectResponse
+    {
+        try {
+            $book->update([
+                'book_code' => $this->bookCode($request->publication_year, $request->category_id),
+                'title' => $title = $request->title,
+                'slug' => $title !== $book->title ? str()->lower(str()->slug($title), str()->random(4)) : $book->slug,
+                'author' => $request->author,
+                'publication_year' => $request->publication_year,
+                'isbn' => $request->isbn,
+                'language' => $request->language,
+                'synopsis' => $request->synopsis,
+                'number_of_pages' => $request->number_of_pages,
+                'status' => $book->stock->total > 0 ? BookStatus::AVAILABLE->value : BookStatus::UNAVAILABLE->value,
+                'cover' => $this->update_file($request, $book, 'cover', 'books'),
+                'price' => $request->price,
+                'category_id' => $request->category_id,
+                'publisher_id' => $request->publisher_id,
+            ]);
+
+            flashMessage(MessageType::UPDATED->message('Buku'));
+
+            return to_route('admin.books.index');
+
+        } catch (\Throwable $e) {
+            flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
+
+            return to_route('admin.books.index');
+        }
+    }
+
+    public function destroy(Book $book): RedirectResponse
+    {
+        try {
+            $this->delete_file($book, 'cover');
+            $book->delete();
+
+             flashMessage(MessageType::DELETED->message('Buku'));
+
+            return to_route('admin.books.index');
+        } catch (\Throwable $e) {
+             flashMessage(MessageType::ERROR->message(error: $e->getMessage()), 'error');
+
+            return to_route('admin.books.index');
+        }
+    }
 }
