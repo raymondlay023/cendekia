@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\BookController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\FineSettingController;
+use App\Http\Controllers\Admin\LoanController;
 use App\Http\Controllers\Admin\PublisherController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -15,9 +17,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         Route::put('categories/edit/{category}', 'update')->name('admin.categories.update');
         Route::delete('categories/destroy/{category}', 'destroy')->name('admin.categories.destroy');
     });
-});
 
-Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::controller(PublisherController::class)->group(function () {
         Route::get('publishers', 'index')->name('admin.publishers.index');
         Route::get('publishers/create', 'create')->name('admin.publishers.create');
@@ -26,9 +26,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         Route::put('publishers/edit/{publisher}', 'update')->name('admin.publishers.update');
         Route::delete('publishers/destroy/{publisher}', 'destroy')->name('admin.publishers.destroy');
     });
-});
 
-Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::controller(BookController::class)->group(function () {
         Route::get('books', 'index')->name('admin.books.index');
         Route::get('books/create', 'create')->name('admin.books.create');
@@ -37,9 +35,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         Route::put('books/edit/{book}', 'update')->name('admin.books.update');
         Route::delete('books/destroy/{book}', 'destroy')->name('admin.books.destroy');
     });
-});
 
-Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::controller(UserController::class)->group(function () {
         Route::get('users', 'index')->name('admin.users.index');
         Route::get('users/create', 'create')->name('admin.users.create');
@@ -48,4 +44,19 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         Route::put('users/edit/{user}', 'update')->name('admin.users.update');
         Route::delete('users/destroy/{user}', 'destroy')->name('admin.users.destroy');
     });
+
+    Route::controller(FineSettingController::class)->group(function () {
+        Route::get('fine-settings/create', 'create')->name('admin.fine-settings.create');
+        Route::put('fine-settings/create', 'store')->name('admin.fine-settings.store');
+    });
+
+    Route::controller(LoanController::class)->group(function () {
+        Route::get('loans', 'index')->name('admin.loans.index');
+        Route::get('loans/create', 'create')->name('admin.loans.create');
+        Route::post('loans/create', 'store')->name('admin.loans.store');
+        Route::get('loans/edit/{loan}', 'edit')->name('admin.loans.edit');
+        Route::put('loans/edit/{loan}', 'update')->name('admin.loans.update');
+        Route::delete('loans/destroy/{loan}', 'destroy')->name('admin.loans.destroy');
+    });
+
 });
