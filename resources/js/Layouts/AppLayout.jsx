@@ -14,6 +14,7 @@ import { Toaster } from '@/Components/ui/sonner';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { IconLayoutSidebar } from '@tabler/icons-react';
 
+import Banner from '@/Components/Banner';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import Sidebar from './Partials/Sidebar';
 import SidebarResponsive from './Partials/SidebarResponsive';
@@ -21,6 +22,7 @@ import SidebarResponsive from './Partials/SidebarResponsive';
 export default function AppLayout({ title, children }) {
     const auth = usePage().props.auth.user;
     const { url } = usePage();
+    const announcement = usePage().props.announcement;
     return (
         <>
             <Head title={title} />
@@ -95,7 +97,12 @@ export default function AppLayout({ title, children }) {
                                     }}
                                 />
                             </div>
-                            <div className="gap-4 p-4 lg:gap-6">{children}</div>
+                            <div className="gap-4 p-4 lg:gap-6">
+                                {children}
+                                {announcement && announcement.is_active == 1 && (
+                                    <Banner message={announcement.message} url={announcement.url} />
+                                )}
+                            </div>
                         </div>
                     </main>
                 </div>
