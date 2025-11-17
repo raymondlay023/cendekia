@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ReturnBookStatus;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,6 +36,11 @@ class ReturnBook extends Model
     public function book(): BelongsTo
     {
         return $this->belongsTo(Book::class);
+    }
+    
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function fine(): HasOne
@@ -91,5 +97,15 @@ class ReturnBook extends Model
     public function scopeMember(Builder $query, int $user_id): Builder 
     {
         return $query->where('user_id', $user_id);
+    }
+
+    public function isOnTime(): bool
+    {
+        return Carbon::today()->lessThanOrEqualTo(Carbon::parse($this->loan->due_date));
+    }
+
+    public function getDaysLate(): int
+    {
+        return max(0, Carbon::parse($this->loan->loan_date)->diffInDays(Carbon::parse($this->return_date)));
     }
 }
