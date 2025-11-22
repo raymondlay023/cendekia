@@ -1,15 +1,5 @@
 import HeaderTitle from '@/Components/HeaderTitle';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from '@/Components/ui/alert-dialog';
-import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar';
+import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
@@ -18,15 +8,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import { UseFilter } from '@/Hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
-import flashMessage from '@/lib/utils';
-import { Link, router } from '@inertiajs/react';
-import { AlertDialogTrigger } from '@radix-ui/react-alert-dialog';
-import { IconArrowsDownUp, IconCategory, IconPencil, IconPlus, IconRefresh, IconTrash } from '@tabler/icons-react';
+import { Link } from '@inertiajs/react';
+import { IconArrowsDownUp, IconKeyframe, IconRefresh } from '@tabler/icons-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 export default function Index(props) {
-    const { data: categories, meta } = props.categories;
+    const { data: roles, meta } = props.roles;
     const [params, setParams] = useState(props.state);
 
     const onSortable = (field) => {
@@ -38,9 +25,9 @@ export default function Index(props) {
     };
 
     UseFilter({
-        route: route('admin.categories.index'),
+        route: route('admin.assign-permissions.index'),
         values: params,
-        only: ['categories'],
+        only: ['roles'],
     });
     return (
         <div className="flex w-full flex-col pb-32">
@@ -48,14 +35,8 @@ export default function Index(props) {
                 <HeaderTitle
                     title={props.page_settings.title}
                     subtitle={props.page_settings.subtitle}
-                    icon={IconCategory}
+                    icon={IconKeyframe}
                 />
-                <Button variant="orange" size="lg" asChild>
-                    <Link href={route('admin.categories.create')}>
-                        <IconPlus />
-                        Tambah
-                    </Link>
-                </Button>
             </div>
             <Card>
                 <CardHeader>
@@ -112,90 +93,31 @@ export default function Index(props) {
                                         </span>
                                     </Button>
                                 </TableHead>
-                                <TableHead>
-                                    <Button
-                                        variant="ghost"
-                                        className="group inline-flex"
-                                        onClick={() => onSortable('slug')}
-                                    >
-                                        Slug
-                                        <span className="ml-2 flex-none rounded text-muted-foreground">
-                                            <IconArrowsDownUp />
-                                        </span>
-                                    </Button>
-                                </TableHead>
-                                <TableHead>Cover</TableHead>
-                                <TableHead>
-                                    <Button
-                                        variant="ghost"
-                                        className="group inline-flex"
-                                        onClick={() => onSortable('created_at')}
-                                    >
-                                        Dibuat pada
-                                        <span className="ml-2 flex-none rounded text-muted-foreground">
-                                            <IconArrowsDownUp />
-                                        </span>
-                                    </Button>
-                                </TableHead>
+                                <TableHead>Permissions</TableHead>
                                 <TableHead>Aksi</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {categories.map((category, index) => (
+                            {roles.map((role, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
-                                    <TableCell>{category.name}</TableCell>
-                                    <TableCell>{category.slug}</TableCell>
+                                    <TableCell>{role.name}</TableCell>
                                     <TableCell>
-                                        <Avatar>
-                                            <AvatarImage src={category.cover} />
-                                            <AvatarFallback>{category.name.substring(0, 1)}</AvatarFallback>
-                                        </Avatar>
+                                        {role.permissions.map((permission, index) => (
+                                            <span className="w-auto text-wrap" key={index}>
+                                                <Badge variant="outline" className="my-0.5 mr-2">
+                                                    {permission}
+                                                </Badge>
+                                            </span>
+                                        ))}
                                     </TableCell>
-                                    <TableCell>{category.created_at}</TableCell>
                                     <TableCell>
                                         <div className="flex items-center gap-x-1">
                                             <Button variant="blue" size="sm" asChild>
-                                                <Link href={route('admin.categories.edit', [category])}>
-                                                    <IconPencil className="size-4" />
+                                                <Link href={route('admin.assign-permissions.edit', [role])}>
+                                                    <IconRefresh className="size-4" />
                                                 </Link>
                                             </Button>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild>
-                                                    <Button variant="red" size="sm">
-                                                        <IconTrash size="4" />
-                                                    </Button>
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader>
-                                                        <AlertDialogTitle>Apakah anda yakin ?</AlertDialogTitle>
-                                                        <AlertDialogDescription>
-                                                            Tindakan ini tidak dapat dibatalkan. Tindakan ini akan
-                                                            menghapus data secara permanen.
-                                                        </AlertDialogDescription>
-                                                    </AlertDialogHeader>
-                                                    <AlertDialogFooter>
-                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                        <AlertDialogAction
-                                                            onClick={() =>
-                                                                router.delete(
-                                                                    route('admin.categories.destroy', [category]),
-                                                                    {
-                                                                        preserveScroll: true,
-                                                                        preserveState: true,
-                                                                        onSuccess: (success) => {
-                                                                            const flash = flashMessage(success);
-                                                                            if (flash) toast[flash.type](flash.message);
-                                                                        },
-                                                                    },
-                                                                )
-                                                            }
-                                                        >
-                                                            Continue
-                                                        </AlertDialogAction>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
                                         </div>
                                     </TableCell>
                                 </TableRow>
@@ -206,7 +128,7 @@ export default function Index(props) {
                 <CardFooter className="flex w-full flex-col items-center justify-between border-t py-2 lg:flex-row">
                     <p className="mb-2 text-sm text-muted-foreground">
                         Memampilkan <span className="font-medium text-orange-500">{meta.from ?? 0}</span> dari{' '}
-                        {meta.total} kategori
+                        {meta.total} tetapkan izin
                     </p>
                     <div className="overflow-x-auto">
                         {meta.has_pages && (

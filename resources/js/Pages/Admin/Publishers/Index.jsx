@@ -15,7 +15,7 @@ import { Input } from '@/Components/ui/input';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink } from '@/Components/ui/pagination';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
-import { UseFilter } from '@/hooks/UseFilter';
+import { UseFilter } from '@/Hooks/UseFilter';
 import AppLayout from '@/Layouts/AppLayout';
 import flashMessage from '@/lib/utils';
 import { Link, router } from '@inertiajs/react';

@@ -9,7 +9,6 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/Components/ui/alert-dialog';
-import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
@@ -21,12 +20,12 @@ import AppLayout from '@/Layouts/AppLayout';
 import flashMessage from '@/lib/utils';
 import { Link, router } from '@inertiajs/react';
 import { AlertDialogTrigger } from '@radix-ui/react-alert-dialog';
-import { IconArrowsDownUp, IconPencil, IconPlus, IconRefresh, IconTrash, IconUsersGroup } from '@tabler/icons-react';
+import { IconArrowsDownUp, IconPencil, IconPlus, IconRefresh, IconTrash, IconVersions } from '@tabler/icons-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Index(props) {
-    const { data: users, meta } = props.users;
+    const { data: permissions, meta } = props.permissions;
     const [params, setParams] = useState(props.state);
 
     const onSortable = (field) => {
@@ -38,9 +37,9 @@ export default function Index(props) {
     };
 
     UseFilter({
-        route: route('admin.users.index'),
+        route: route('admin.permissions.index'),
         values: params,
-        only: ['users'],
+        only: ['permissions'],
     });
     return (
         <div className="flex w-full flex-col pb-32">
@@ -48,10 +47,10 @@ export default function Index(props) {
                 <HeaderTitle
                     title={props.page_settings.title}
                     subtitle={props.page_settings.subtitle}
-                    icon={IconUsersGroup}
+                    icon={IconVersions}
                 />
                 <Button variant="orange" size="lg" asChild>
-                    <Link href={route('admin.users.create')}>
+                    <Link href={route('admin.permissions.create')}>
                         <IconPlus />
                         Tambah
                     </Link>
@@ -116,58 +115,9 @@ export default function Index(props) {
                                     <Button
                                         variant="ghost"
                                         className="group inline-flex"
-                                        onClick={() => onSortable('username')}
+                                        onClick={() => onSortable('guard')}
                                     >
-                                        Username
-                                        <span className="ml-2 flex-none rounded text-muted-foreground">
-                                            <IconArrowsDownUp />
-                                        </span>
-                                    </Button>
-                                </TableHead>
-                                <TableHead>
-                                    <Button
-                                        variant="ghost"
-                                        className="group inline-flex"
-                                        onClick={() => onSortable('email')}
-                                    >
-                                        Email
-                                        <span className="ml-2 flex-none rounded text-muted-foreground">
-                                            <IconArrowsDownUp />
-                                        </span>
-                                    </Button>
-                                </TableHead>
-                                <TableHead>
-                                    <Button
-                                        variant="ghost"
-                                        className="group inline-flex"
-                                        onClick={() => onSortable('phone')}
-                                    >
-                                        Nomor Handphone
-                                        <span className="ml-2 flex-none rounded text-muted-foreground">
-                                            <IconArrowsDownUp />
-                                        </span>
-                                    </Button>
-                                </TableHead>
-                                <TableHead>Avatar</TableHead>
-                                <TableHead>
-                                    <Button
-                                        variant="ghost"
-                                        className="group inline-flex"
-                                        onClick={() => onSortable('gender')}
-                                    >
-                                        Jenis Kelamin
-                                        <span className="ml-2 flex-none rounded text-muted-foreground">
-                                            <IconArrowsDownUp />
-                                        </span>
-                                    </Button>
-                                </TableHead>
-                                <TableHead>
-                                    <Button
-                                        variant="ghost"
-                                        className="group inline-flex"
-                                        onClick={() => onSortable('date_of_birth')}
-                                    >
-                                        Tanggal Lahir
+                                        Guard
                                         <span className="ml-2 flex-none rounded text-muted-foreground">
                                             <IconArrowsDownUp />
                                         </span>
@@ -179,7 +129,7 @@ export default function Index(props) {
                                         className="group inline-flex"
                                         onClick={() => onSortable('created_at')}
                                     >
-                                        Dibuat Pada
+                                        Dibuat pada
                                         <span className="ml-2 flex-none rounded text-muted-foreground">
                                             <IconArrowsDownUp />
                                         </span>
@@ -189,26 +139,16 @@ export default function Index(props) {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {users.map((user, index) => (
+                            {permissions.map((permission, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{index + 1 + (meta.current_page - 1) * meta.per_page}</TableCell>
-                                    <TableCell>{user.name}</TableCell>
-                                    <TableCell>{user.username}</TableCell>
-                                    <TableCell>{user.email}</TableCell>
-                                    <TableCell>{user.phone}</TableCell>
-                                    <TableCell>
-                                        <Avatar>
-                                            <AvatarImage src={user.cover} />
-                                            <AvatarFallback>{user.name.substring(0, 1)}</AvatarFallback>
-                                        </Avatar>
-                                    </TableCell>
-                                    <TableCell>{user.gender}</TableCell>
-                                    <TableCell>{user.date_of_birth}</TableCell>
-                                    <TableCell>{user.created_at}</TableCell>
+                                    <TableCell>{permission.name}</TableCell>
+                                    <TableCell>{permission.guard_name}</TableCell>
+                                    <TableCell>{permission.created_at}</TableCell>
                                     <TableCell>
                                         <div className="flex items-center gap-x-1">
                                             <Button variant="blue" size="sm" asChild>
-                                                <Link href={route('admin.users.edit', [user])}>
+                                                <Link href={route('admin.permissions.edit', [permission])}>
                                                     <IconPencil className="size-4" />
                                                 </Link>
                                             </Button>
@@ -230,14 +170,17 @@ export default function Index(props) {
                                                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                                                         <AlertDialogAction
                                                             onClick={() =>
-                                                                router.delete(route('admin.users.destroy', [user]), {
-                                                                    preserveScroll: true,
-                                                                    preserveState: true,
-                                                                    onSuccess: (success) => {
-                                                                        const flash = flashMessage(success);
-                                                                        if (flash) toast[flash.type](flash.message);
+                                                                router.delete(
+                                                                    route('admin.permissions.destroy', [permission]),
+                                                                    {
+                                                                        preserveScroll: true,
+                                                                        preserveState: true,
+                                                                        onSuccess: (success) => {
+                                                                            const flash = flashMessage(success);
+                                                                            if (flash) toast[flash.type](flash.message);
+                                                                        },
                                                                     },
-                                                                })
+                                                                )
                                                             }
                                                         >
                                                             Continue
@@ -255,7 +198,7 @@ export default function Index(props) {
                 <CardFooter className="flex w-full flex-col items-center justify-between border-t py-2 lg:flex-row">
                     <p className="mb-2 text-sm text-muted-foreground">
                         Memampilkan <span className="font-medium text-orange-500">{meta.from ?? 0}</span> dari{' '}
-                        {meta.total} pengguna
+                        {meta.total} izin
                     </p>
                     <div className="overflow-x-auto">
                         {meta.has_pages && (
