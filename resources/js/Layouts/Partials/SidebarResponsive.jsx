@@ -95,7 +95,12 @@ export default function SidebarResponsive({ url, auth }) {
                     title="Pengumuman"
                     icon={IconAlertCircle}
                 />
-                <NavLink url={route('profile.edit')} title="Profile" icon={IconUser} />
+                <NavLink
+                    url={route('profile.edit')}
+                    active={url.startsWith('/admin/profile')}
+                    title="Profile"
+                    icon={IconUser}
+                />
                 <NavLink
                     url={route('logout')}
                     title="Logout"
