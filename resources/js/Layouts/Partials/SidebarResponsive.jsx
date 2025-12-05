@@ -94,7 +94,12 @@ export default function SidebarResponsive({ url, auth }) {
                     title="Tetapkan Peran"
                     icon={IconLayoutKanban}
                 />
-                <NavLink url="#" title="Akses Rute" icon={IconRoute} />
+                <NavLink
+                    url={route('admin.route-accesses.index')}
+                    active={url.startsWith('/admin/route-accesses')}
+                    title="Akses Rute"
+                    icon={IconRoute}
+                />
                 <div className="px-3 py-2 text-sm font-semibold text-foreground">Transaksi</div>
                 <NavLink
                     url={route('admin.loans.index')}
