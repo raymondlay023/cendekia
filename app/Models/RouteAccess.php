@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Permission\Models\Permission;
@@ -19,9 +20,29 @@ class RouteAccess extends Model
     {
         return $this->belongsTo(Role::class);
     }
+
     public function permission(): BelongsTo
     {
         return $this->belongsTo(Permission::class);
     }
-    
+
+    public function scopeFilter(Builder $query, array $filters): void
+    {
+        $query->when($filters['search'], function ($query, $search) {
+            $query->where('route_name', 'REGEXP', $search)
+                ->orWhereHas('role', fn($query) => $query->where('name', 'REGEXP', $search))
+                ->orWhereHas('permission', fn($query) => $query->where('name', 'REGEXP', $search));
+        });
+    }
+
+    public function scopeSorting(Builder $query, array $sorts): void
+    {
+        $query->when($sorts['field'] ?? null && $sorts['direction'] ?? null, function($query) use ($sorts) {
+            match($sorts['field']) {
+                'role_id' => $query->whereHas('roles', fn($query) => $query->orderBy('name', $sorts['direction'])),
+                'permission_id' => $query->whereHas('permissions', fn($query) => $query->orderBy('name', $sorts['direction'])),
+                default => $query->orderBy($sorts['field'], $sorts['direction']),
+            };
+        });
+    }
 }
